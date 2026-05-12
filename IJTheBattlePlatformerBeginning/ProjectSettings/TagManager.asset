@@ -11,14 +11,14 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Coin
+  - EnemyPatrolInvisibleBorder
+  - AidMeat
+  - Player
+  - WeaponPlayer
+  - Enemy
+  - WeaponEnemy
   - 
   - 
   - 
