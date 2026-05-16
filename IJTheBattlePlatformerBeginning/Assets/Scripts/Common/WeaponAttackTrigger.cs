@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class AttackTrigger : MonoBehaviour
+public class WeaponAttackTrigger : MonoBehaviour
 {
     public IDamageable Target { get; private set; }
 

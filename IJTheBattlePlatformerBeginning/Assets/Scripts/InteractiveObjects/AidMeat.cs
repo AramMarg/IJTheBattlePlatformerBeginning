@@ -11,11 +11,6 @@ public class AidMeat : MonoBehaviour, IInteractable<AidMeat>
         GetComponent<Collider2D>().isTrigger = true;
     }
 
-    public void RunDestroy()
-    {
-        Destroy(gameObject);
-    }
-
     public void Interact()
     {
         Interacted?.Invoke(this);

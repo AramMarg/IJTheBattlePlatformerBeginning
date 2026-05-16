@@ -11,11 +11,6 @@ public class Coin : MonoBehaviour, IInteractable<Coin>
         GetComponent<Collider2D>().isTrigger = true;
     }
 
-    public void RunDestroy()
-    {
-        Destroy(gameObject);
-    }
-
     public void Interact()
     {
         Interacted?.Invoke(this);

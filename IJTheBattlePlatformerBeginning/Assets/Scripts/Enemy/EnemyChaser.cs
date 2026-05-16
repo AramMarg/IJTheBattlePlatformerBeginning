@@ -12,7 +12,7 @@ public class EnemyChaser : MonoBehaviour
     private bool _runChase;
 
     public event Action PlayerLosted;
-    
+
     public void SetTarget(Transform target)
     {
         _target = target;
@@ -56,6 +56,6 @@ public class EnemyChaser : MonoBehaviour
         if (_target == null)
             return false;
 
-        return Vector2.Distance(transform.position, _target.position) <= _chaseRange;
+        return (_target.position - transform.position).sqrMagnitude <= Mathf.Pow(_chaseRange,2);
     }
 }

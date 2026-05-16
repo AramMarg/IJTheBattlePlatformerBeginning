@@ -1,8 +1,8 @@
-using System;
-using System.Collections;
 using UnityEngine;
+using System.Collections;
+using System;
 
-public class EnemyDetector : MonoBehaviour
+public class EnemyVision : MonoBehaviour
 {
     private Coroutine _coroutine;
     private WaitForSeconds _wait;
@@ -16,29 +16,35 @@ public class EnemyDetector : MonoBehaviour
     private void Start()
     {
         _wait = new(_delay);
+    }
+
+    public void TurnOnDetect()
+    {
+        _needTarget = true;
 
         _coroutine = StartCoroutine(nameof(Detect));
     }
 
-    public void TurnOnDetector() =>
-        _needTarget = true;
-
-    public void TurnOffDetector() =>
+    public void TurnOffDetect() =>
         _needTarget = false;
 
     private IEnumerator Detect()
     {
         while (_needTarget)
         {
+            Player player = null;
+
             Collider2D[] items = Physics2D.OverlapCircleAll(transform.position, _checkRadius);
 
             foreach (var item in items)
             {
-                if (item.TryGetComponent(out Player player))
+                if (item.TryGetComponent(out player))
                 {
                     PlayerFinded?.Invoke(player);
 
                     _needTarget = false;
+
+                    StopCoroutine(_coroutine);
 
                     break;
                 }
@@ -52,5 +58,5 @@ public class EnemyDetector : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _checkRadius);
-    } 
+    }
 }

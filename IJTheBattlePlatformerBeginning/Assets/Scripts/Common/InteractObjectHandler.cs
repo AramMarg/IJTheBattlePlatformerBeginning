@@ -30,7 +30,7 @@ public class InteractObjectHandler<T> : MonoBehaviour where T : Component, IInte
 
         _coroutine = StartCoroutine(CreateNew(item.transform.position));
 
-        item.RunDestroy();
+        Destroy(item.gameObject);
     }
 
     private IEnumerator CreateNew(Vector2 position)

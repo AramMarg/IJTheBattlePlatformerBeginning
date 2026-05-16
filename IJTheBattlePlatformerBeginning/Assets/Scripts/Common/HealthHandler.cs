@@ -7,6 +7,8 @@ public class HealthHandler : MonoBehaviour, IDamageable
     [SerializeField] private int _amor;
 
     private int _healHealth = 10;
+    private  int _minHealth = 0;
+    private int _maxHealth = 100;
 
     public event Action Died;
 
@@ -19,21 +21,23 @@ public class HealthHandler : MonoBehaviour, IDamageable
             damage = 1;
         }
 
-        _health -= damage;
+        _health = Mathf.Clamp(_health - damage, _minHealth, _maxHealth);
 
-        if (_health <= 0)
-        {
-            Died?.Invoke();
-
-            Destroy(gameObject);
-        }
+        CheckHealth();
     }
 
     public void Heal()
     {
-        int minHealth = 0;
-        int maxHealth = 100;
+        _health = Mathf.Clamp(_health + _healHealth, _minHealth, _maxHealth);
 
-        _health = Mathf.Clamp(_health + _healHealth, minHealth, maxHealth);
+        CheckHealth();
+    }
+
+    private void CheckHealth()
+    {
+        if (_health == 0)
+        {
+            Died?.Invoke();
+        }
     }
 }

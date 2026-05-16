@@ -1,18 +1,20 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 [RequireComponent (typeof (Collider2D), typeof(Rigidbody2D))]
-[RequireComponent(typeof(EnemyDetector), typeof(EnemyChaser))]
-[RequireComponent(typeof(EnemyPatroller), typeof(Attacker))]
+[RequireComponent(typeof(EnemyVision), typeof(EnemyChaser))]
+[RequireComponent(typeof(EnemyPatroller), typeof(Attacker), typeof(HealthHandler))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private AttackTrigger _attackTrigger;
+    [SerializeField] private WeaponAttackTrigger _weaponAttackTrigger;
+    [SerializeField] private ObjectDestroyer _objectDestroyer;
+    [SerializeField] private EnemyAnimator _enemyAnimator;
 
-    private EnemyDetector _enemyDetector;
+    private EnemyVision _enemyVision; 
     private EnemyPatroller _enemyPatroller;
     private EnemyChaser _enemyChaser;
     private Attacker _attacker;
+    private HealthHandler _healthHandler;
 
     private Coroutine _coroutine;
     private WaitForSeconds _wait;
@@ -20,45 +22,49 @@ public class Enemy : MonoBehaviour
 
     private Player _player;
 
-    public event Action<bool> AttackStarted;
-
     private void Awake()
     {
         GetComponent<Rigidbody2D>().freezeRotation = true;
 
-        _enemyDetector = GetComponent<EnemyDetector>();
+        _enemyVision = GetComponent<EnemyVision>();
         _enemyPatroller = GetComponent<EnemyPatroller>();
         _enemyChaser = GetComponent<EnemyChaser>();
         _attacker = GetComponent<Attacker>();
+        _healthHandler = GetComponent<HealthHandler>();
     }
 
     private void OnEnable()
     {
-        _enemyDetector.PlayerFinded += OnPlayerFinded;
-
+        _enemyVision.PlayerFinded += OnPlayerFinded;
         _enemyChaser.PlayerLosted += OnPlayerLosted;
+        _healthHandler.Died += OnDied;
     }
 
     private void OnDisable()
     {
-        _enemyDetector.PlayerFinded -= OnPlayerFinded;
+        _enemyVision.PlayerFinded -= OnPlayerFinded;
         _enemyChaser.PlayerLosted -= OnPlayerLosted;
+        _healthHandler.Died -= OnDied;
     }
 
     private void Start()
     {
         _wait = new(_delay);
+
+        _enemyPatroller.RunPatrol();
+
+        _enemyVision.TurnOnDetect();
     }
 
     private void Update()
     {
-        if (_attackTrigger.Target != null && _coroutine == null)
+        if (_weaponAttackTrigger.Target != null && _coroutine == null)
         {
             _enemyChaser.StopChase();
 
             _enemyPatroller.StopPatrol();
 
-            _enemyDetector.TurnOffDetector();
+            _enemyVision.TurnOffDetect();
 
             _coroutine = StartCoroutine(AttackWithTimer());
         }
@@ -66,16 +72,18 @@ public class Enemy : MonoBehaviour
         {
             if (_player != null)
             {
+                _enemyPatroller.StopPatrol();
+
                 _enemyChaser.SetTarget(_player.transform);
                 _enemyChaser.RunChase();
-                _enemyDetector.TurnOnDetector();
-
             }
             else
             {
                 _enemyChaser.StopChase();
+
                 _enemyPatroller.RunPatrol();
-                _enemyDetector.TurnOnDetector();
+
+                _enemyVision.TurnOnDetect();
             }
         }
     }
@@ -92,22 +100,23 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator AttackWithTimer()
     {
-        bool canAttack = true;
+        bool isAttack = true;
 
-        AttackStarted?.Invoke(canAttack);
+        _enemyAnimator.Attack(isAttack);
 
-        _attacker.SetCanAttack(canAttack);
-
-        _attacker.Attack(_attackTrigger.Target);
+        _attacker.Attack(_weaponAttackTrigger.Target);
 
         yield return _wait;
 
-        canAttack = false;
-
-        AttackStarted?.Invoke(canAttack);
-
-        _attacker.SetCanAttack(canAttack);
+        _enemyAnimator.Attack(!isAttack);
 
         _coroutine = null;
+    }
+
+    private void OnDied()
+    {
+        _objectDestroyer.StartDestroy(gameObject);
+
+        _enemyAnimator.Died();
     }
 }

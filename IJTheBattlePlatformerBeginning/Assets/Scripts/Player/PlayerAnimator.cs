@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    [SerializeField] private InputReader _inputReader;
-    [SerializeField] private HealthHandler _healthHandler;
-    [SerializeField] private GroundCheker _groundChecker;
-
     private Animator _animatior;
 
     private int _forAnimation;
@@ -15,44 +11,7 @@ public class PlayerAnimator : MonoBehaviour
         _animatior = GetComponent<Animator>();
     }
 
-    private void OnEnable()
-    {
-        _inputReader.MoveClicked += OnMoveClicked;
-
-        _inputReader.JumpClicked += OnJumpClicked;
-
-        _inputReader.AttackClicked += OnAttackClicked;
-
-        _healthHandler.Died += OnDied;
-    }
-
-    private void OnDisable()
-    {
-        _inputReader.MoveClicked -= OnMoveClicked;
-
-        _inputReader.JumpClicked -= OnJumpClicked;
-
-        _inputReader.AttackClicked -= OnAttackClicked;
-
-        _healthHandler.Died -= OnDied;
-    }
-
-    private void OnAttackClicked(bool isAttack)
-    {
-        _animatior.SetBool(PlayerAnimatorData.Parametrs.IsAttack, isAttack);
-    }
-
-    private void OnJumpClicked(bool isJump)
-    {
-        if (_groundChecker.IsGround && isJump)
-        {
-            _animatior.SetBool(PlayerAnimatorData.Parametrs.IsJump, isJump);
-        }
-
-        _animatior.SetBool(PlayerAnimatorData.Parametrs.IsJump, isJump);
-    }
-
-    private void OnMoveClicked(Vector2 vector)
+    public void Move(Vector2 vector)
     {
         if (vector == Vector2.zero)
         {
@@ -68,7 +27,22 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    private void OnDied()
+    public void Jump(bool isJump)
+    {
+        if (isJump)
+        {
+            _animatior.SetBool(PlayerAnimatorData.Parametrs.IsJump, isJump);
+        }
+
+        _animatior.SetBool(PlayerAnimatorData.Parametrs.IsJump, isJump);
+    }
+
+    public void Attack(bool isAttack)
+    {
+        _animatior.SetBool(PlayerAnimatorData.Parametrs.IsAttack, isAttack);
+    }
+
+    public void Died()
     {
         _animatior.SetTrigger(PlayerAnimatorData.Parametrs.Die);
     }
