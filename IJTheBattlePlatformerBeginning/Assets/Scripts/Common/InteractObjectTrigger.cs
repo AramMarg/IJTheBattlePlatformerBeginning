@@ -3,24 +3,25 @@ using UnityEngine;
 
 public class InteractObjectTrigger : MonoBehaviour
 {
-    [SerializeField] private HealthHandler _healthHandler;
-
     public event Action CoinGot;
+    public event Action AidMeatGot;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out Coin coin))
+        if(collision.TryGetComponent(out InteractObject interactObject))
         {
-            CoinGot?.Invoke();
+            if(interactObject is Coin coin)
+            {
+                CoinGot?.Invoke();
 
                 coin.Interact();
-        }
+            }
+            else if (interactObject is AidMeat aidMeat)
+            {
+                AidMeatGot?.Invoke();
 
-        if (collision.TryGetComponent(out AidMeat aidMeat))
-        {
-            _healthHandler.Heal();
-
-            aidMeat.Interact();
+                aidMeat.Interact();
+            }
         }
     }
 }

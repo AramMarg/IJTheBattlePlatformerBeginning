@@ -2,8 +2,8 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent (typeof (Collider2D), typeof(Rigidbody2D))]
-[RequireComponent(typeof(EnemyVision), typeof(EnemyChaser))]
-[RequireComponent(typeof(EnemyPatroller), typeof(Attacker), typeof(HealthHandler))]
+[RequireComponent(typeof(EnemyVision), typeof(EnemyChaser), typeof(EnemyAnimator))]
+[RequireComponent(typeof(EnemyPatroller), typeof(Attacker), typeof(Healther))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private WeaponAttackTrigger _weaponAttackTrigger;
@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     private EnemyPatroller _enemyPatroller;
     private EnemyChaser _enemyChaser;
     private Attacker _attacker;
-    private HealthHandler _healthHandler;
+    private Healther _healther;
 
     private Coroutine _coroutine;
     private WaitForSeconds _wait;
@@ -30,21 +30,21 @@ public class Enemy : MonoBehaviour
         _enemyPatroller = GetComponent<EnemyPatroller>();
         _enemyChaser = GetComponent<EnemyChaser>();
         _attacker = GetComponent<Attacker>();
-        _healthHandler = GetComponent<HealthHandler>();
+        _healther = GetComponent<Healther>();
     }
 
     private void OnEnable()
     {
         _enemyVision.PlayerFinded += OnPlayerFinded;
         _enemyChaser.PlayerLosted += OnPlayerLosted;
-        _healthHandler.Died += OnDied;
+        _healther.Died += OnDied;
     }
 
     private void OnDisable()
     {
         _enemyVision.PlayerFinded -= OnPlayerFinded;
         _enemyChaser.PlayerLosted -= OnPlayerLosted;
-        _healthHandler.Died -= OnDied;
+        _healther.Died -= OnDied;
     }
 
     private void Start()

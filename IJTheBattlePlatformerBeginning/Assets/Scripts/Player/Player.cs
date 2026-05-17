@@ -1,26 +1,30 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D), typeof(Attacker))]
-[RequireComponent(typeof(HealthHandler), typeof(PlayerMover))]
+[RequireComponent(typeof(Healther), typeof(PlayerMover), typeof(PlayerAnimator))]
+[RequireComponent(typeof(PlayerJumper), typeof(InteractObjectTrigger))]
 public class Player : MonoBehaviour
 {
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private WeaponAttackTrigger _weaponAttackTrigger;
     [SerializeField] private ObjectDestroyer _objectDestroyer;
     [SerializeField] private PlayerMover _playerMover;
+    [SerializeField] private PlayerJumper _playerJumper;
     [SerializeField] private MovementRotator _movementRotator;
     [SerializeField] private GroundCheker _groundChecker;
     [SerializeField] private PlayerAnimator _playerAnimator;
+    [SerializeField] private InteractObjectTrigger _interactObjectTrigger;
+    [SerializeField] private UiViewer _uiViewer;
 
     private Attacker _attacker;
-    private HealthHandler _healthHandler; 
+    private Healther _healther; 
 
     private void Awake()
     {
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 
         _attacker = GetComponent<Attacker>();
-        _healthHandler = GetComponent<HealthHandler>();
+        _healther = GetComponent<Healther>();
     }
 
     private void OnEnable()
@@ -28,7 +32,21 @@ public class Player : MonoBehaviour
         _inputReader.MoveClicked += OnMoveClicked;
         _inputReader.JumpClicked += OnJumpClicked;
         _inputReader.AttackClicked += OnAttackClicked;
-        _healthHandler.Died += OnDied;
+
+        _healther.Died += OnDied;
+
+        _interactObjectTrigger.CoinGot += OnACoinGot;
+        _interactObjectTrigger.AidMeatGot += OnAidMeatGot;
+    }
+
+    private void OnACoinGot()
+    {
+        _uiViewer.CoinGot();
+    }
+
+    private void OnAidMeatGot()
+    {
+        _healther.Heal();
     }
 
     private void OnDisable()
@@ -36,7 +54,12 @@ public class Player : MonoBehaviour
         _inputReader.MoveClicked -= OnMoveClicked;
         _inputReader.JumpClicked -= OnJumpClicked;
         _inputReader.AttackClicked -= OnAttackClicked;
-        _healthHandler.Died -= OnDied;
+
+        _healther.Died -= OnDied;
+
+        _interactObjectTrigger.CoinGot -= OnACoinGot;
+        _interactObjectTrigger.AidMeatGot -= OnAidMeatGot;
+
     }
 
     private void OnMoveClicked(Vector2 inputAxis)
@@ -52,7 +75,7 @@ public class Player : MonoBehaviour
     {
         if (_groundChecker.IsGround && isJump)
         {
-            _playerMover.Jump(isJump);
+            _playerJumper.Jump();
 
             _playerAnimator.Jump(isJump);
         }

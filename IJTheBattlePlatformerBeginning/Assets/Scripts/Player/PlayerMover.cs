@@ -1,10 +1,8 @@
 using UnityEngine;
 
-[RequireComponent(typeof(MovementRotator),typeof(GroundCheker))]
 public class PlayerMover : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
-    [SerializeField] private float _jumpSpeed;
 
     private Vector2 _inputAxis; 
 
@@ -23,10 +21,5 @@ public class PlayerMover : MonoBehaviour
     public  void Move(Vector2 inputAxis)
     {
         _inputAxis = inputAxis;
-    }
-
-    public void Jump(bool isJump)
-    {
-        _rigidbody.AddForce(Vector2.up * _jumpSpeed , ForceMode2D.Impulse);
     }
 }
