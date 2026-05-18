@@ -24,7 +24,7 @@ public class InteractObjectHandler<T> : MonoBehaviour where T : Component, IInte
         _wait = new(_delay);
     }
 
-    public void OnInteract(T item)
+    private void OnInteract(T item)
     {
         item.Interacted -= OnInteract;
 

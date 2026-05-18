@@ -1,12 +1,8 @@
-using System;
-
-public class AidMeat : InteractObject, IInteractable<AidMeat>
+public class AidMeat : InteractObjectGeneric<AidMeat>, IInteractable<AidMeat>
 {
-    public event Action<AidMeat> Interacted;
-
-    public void Interact()
+    protected override AidMeat GetValue()
     {
-        Interacted?.Invoke(this);
+        return this;
     }
 }
 

@@ -11,7 +11,7 @@ public class EnemyVision : MonoBehaviour
     private bool _needTarget;
     private float _checkRadius = 2f;
 
-    public event Action<Player> PlayerFinded;
+    public event Action<Transform> TargetFinded;
 
     private void Start()
     {
@@ -32,15 +32,13 @@ public class EnemyVision : MonoBehaviour
     {
         while (_needTarget)
         {
-            Player player = null;
-
             Collider2D[] items = Physics2D.OverlapCircleAll(transform.position, _checkRadius);
 
             foreach (var item in items)
             {
-                if (item.TryGetComponent(out player))
+                if (item.TryGetComponent(out Player player))
                 {
-                    PlayerFinded?.Invoke(player);
+                    TargetFinded?.Invoke(player.transform);
 
                     _needTarget = false;
 

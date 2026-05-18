@@ -1,11 +1,7 @@
-using System;
-
-public class Coin : InteractObject, IInteractable<Coin>
+public class Coin : InteractObjectGeneric<Coin>, IInteractable<Coin>
 {
-    public event Action<Coin> Interacted;
-    
-    public void Interact()
+    protected override Coin GetValue()
     {
-        Interacted?.Invoke(this);
+        return this;
     }
 }

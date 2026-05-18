@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent (typeof (Collider2D), typeof(Rigidbody2D))]
-[RequireComponent(typeof(EnemyVision), typeof(EnemyChaser), typeof(EnemyAnimator))]
+[RequireComponent(typeof(EnemyVision), typeof(EnemyChaser))]
 [RequireComponent(typeof(EnemyPatroller), typeof(Attacker), typeof(Healther))]
 public class Enemy : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     private WaitForSeconds _wait;
     private float _delay = 0.3f;
 
-    private Player _player;
+    private Transform _target;
 
     private void Awake()
     {
@@ -35,14 +35,14 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        _enemyVision.PlayerFinded += OnPlayerFinded;
+        _enemyVision.TargetFinded += OnPlayerFinded;
         _enemyChaser.PlayerLosted += OnPlayerLosted;
         _healther.Died += OnDied;
     }
 
     private void OnDisable()
     {
-        _enemyVision.PlayerFinded -= OnPlayerFinded;
+        _enemyVision.TargetFinded -= OnPlayerFinded;
         _enemyChaser.PlayerLosted -= OnPlayerLosted;
         _healther.Died -= OnDied;
     }
@@ -70,11 +70,11 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            if (_player != null)
+            if (_target != null)
             {
                 _enemyPatroller.StopPatrol();
 
-                _enemyChaser.SetTarget(_player.transform);
+                _enemyChaser.SetTarget(_target.transform);
                 _enemyChaser.RunChase();
             }
             else
@@ -88,14 +88,14 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnPlayerFinded(Player player)
+    private void OnPlayerFinded(Transform target)
     {
-        _player = player;
+        _target = target;
     }
 
     private void OnPlayerLosted()
     {
-        _player = null;
+        _target = null;
     }
 
     private IEnumerator AttackWithTimer()

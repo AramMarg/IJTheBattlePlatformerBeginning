@@ -8,15 +8,10 @@ public class InteractObjectTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print(collision);
         if(collision.TryGetComponent(out InteractObject interactObject))
         {
             if(interactObject is Coin coin)
             {
-                print(interactObject);
-
-                print(interactObject.gameObject);
-
                 CoinGot?.Invoke();
 
                 coin.Interact();

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D), typeof(Attacker))]
-[RequireComponent(typeof(Healther), typeof(PlayerMover), typeof(PlayerAnimator))]
+[RequireComponent(typeof(Healther), typeof(PlayerMover))]
 [RequireComponent(typeof(PlayerJumper), typeof(InteractObjectTrigger))]
 public class Player : MonoBehaviour
 {
