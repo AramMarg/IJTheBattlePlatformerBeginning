@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent (typeof (Collider2D), typeof(Rigidbody2D))]
 [RequireComponent(typeof(EnemyVision), typeof(EnemyChaser))]
-[RequireComponent(typeof(EnemyPatroller), typeof(Attacker), typeof(Healther))]
+[RequireComponent(typeof(EnemyPatroller), typeof(Attacker), typeof(Health))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private WeaponAttackTrigger _weaponAttackTrigger;
@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     private EnemyPatroller _enemyPatroller;
     private EnemyChaser _enemyChaser;
     private Attacker _attacker;
-    private Healther _healther;
+    private Health _health;
 
     private Coroutine _coroutine;
     private WaitForSeconds _wait;
@@ -30,21 +30,21 @@ public class Enemy : MonoBehaviour
         _enemyPatroller = GetComponent<EnemyPatroller>();
         _enemyChaser = GetComponent<EnemyChaser>();
         _attacker = GetComponent<Attacker>();
-        _healther = GetComponent<Healther>();
+        _health = GetComponent<Health>();
     }
 
     private void OnEnable()
     {
         _enemyVision.TargetFinded += OnPlayerFinded;
         _enemyChaser.PlayerLosted += OnPlayerLosted;
-        _healther.Died += OnDied;
+        _health.Died += OnDied;
     }
 
     private void OnDisable()
     {
         _enemyVision.TargetFinded -= OnPlayerFinded;
         _enemyChaser.PlayerLosted -= OnPlayerLosted;
-        _healther.Died -= OnDied;
+        _health.Died -= OnDied;
     }
 
     private void Start()

@@ -1,8 +1,9 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D), typeof(Attacker))]
-[RequireComponent(typeof(Healther), typeof(PlayerMover))]
+[RequireComponent(typeof(Health), typeof(PlayerMover),typeof(PlayerHealHealthCalculator))]
 [RequireComponent(typeof(PlayerJumper), typeof(InteractObjectTrigger))]
+[RequireComponent(typeof(PlayerDamageHealthCalculator))]
 public class Player : MonoBehaviour
 {
     [SerializeField] private InputReader _inputReader;
@@ -17,14 +18,16 @@ public class Player : MonoBehaviour
     [SerializeField] private UiViewer _uiViewer;
 
     private Attacker _attacker;
-    private Healther _healther; 
+    private Health _health;
+    private PlayerHealHealthCalculator _healHealthCalculator;
 
     private void Awake()
     {
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 
         _attacker = GetComponent<Attacker>();
-        _healther = GetComponent<Healther>();
+        _health = GetComponent<Health>();
+        _healHealthCalculator = GetComponent<PlayerHealHealthCalculator>();
     }
 
     private void OnEnable()
@@ -33,7 +36,7 @@ public class Player : MonoBehaviour
         _inputReader.JumpClicked += OnJumpClicked;
         _inputReader.AttackClicked += OnAttackClicked;
 
-        _healther.Died += OnDied;
+        _health.Died += OnDied;
 
         _interactObjectTrigger.CoinGot += OnACoinGot;
         _interactObjectTrigger.AidMeatGot += OnAidMeatGot;
@@ -46,7 +49,7 @@ public class Player : MonoBehaviour
 
     private void OnAidMeatGot()
     {
-        _healther.Heal();
+        _healHealthCalculator.Heal();
     }
 
     private void OnDisable()
@@ -55,7 +58,7 @@ public class Player : MonoBehaviour
         _inputReader.JumpClicked -= OnJumpClicked;
         _inputReader.AttackClicked -= OnAttackClicked;
 
-        _healther.Died -= OnDied;
+        _health.Died -= OnDied;
 
         _interactObjectTrigger.CoinGot -= OnACoinGot;
         _interactObjectTrigger.AidMeatGot -= OnAidMeatGot;

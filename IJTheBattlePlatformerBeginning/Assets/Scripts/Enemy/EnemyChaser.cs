@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(GroundCheker), typeof(LookRotator))]
+[RequireComponent(typeof(GroundCheker))]
 public class EnemyChaser : MonoBehaviour
 {
     [SerializeField] private LookRotator _lookRotator;

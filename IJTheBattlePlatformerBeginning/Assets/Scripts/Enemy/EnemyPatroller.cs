@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(GroundCheker), typeof(LookRotator))]
+[RequireComponent(typeof(GroundCheker))]
 public class EnemyPatroller : MonoBehaviour
 {
     [SerializeField] private GroundCheker _groundCheker;

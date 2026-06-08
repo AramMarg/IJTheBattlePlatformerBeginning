@@ -12,7 +12,9 @@ public class MovementRotator : MonoBehaviour
 
         tempDirection = direction.x;
 
-        if (_direction != tempDirection && _direction != 0 && tempDirection != 0)
+        if (_direction != tempDirection &&
+            (Mathf.Approximately(_direction, 0) == false )
+            && (Mathf.Approximately(tempDirection, 0) == false))
         {
             _direction = tempDirection;
 
