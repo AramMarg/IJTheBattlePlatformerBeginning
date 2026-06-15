@@ -9,7 +9,7 @@ public class PlayerVampirer : MonoBehaviour
 
     private Coroutine _coroutine;
 
-    private int _takeAwayHealthCount = 15;
+    private int _takeAwayHealthCount = 5;
 
     private float _checkRadius = 2f;
 
@@ -19,15 +19,21 @@ public class PlayerVampirer : MonoBehaviour
 
     private Collider2D[] items;
 
-    public int AmountTimeVampirism { get; } = 6;
-    public int AmountTimeReloadVampirism { get; } = 4;
+    private int _amountTimeVampirism = 6;
+    private int _amountTimeReloadVampirism = 4;
+    private float _fillConvertCount = 100f;
+    private float _increaseFillCount;
+    private float _decreaseFillCount;
 
-    public event Action VampirismRan;
-    public event Action VampirismReloaded;
+    public event Action<float> VampirismRan;
+    public event Action<float> VampirismReloaded;
 
     private void Awake()
     {
         items = new Collider2D[_maxEnemy];
+
+        _decreaseFillCount = _amountTimeVampirism / _fillConvertCount;
+        _increaseFillCount = _amountTimeReloadVampirism / _fillConvertCount;
     }
 
     public void StartVampirism()
@@ -36,7 +42,7 @@ public class PlayerVampirer : MonoBehaviour
 
         if (isRunVampirism)
         {
-            _coroutine = StartCoroutine(nameof(RunVampirism));
+            _coroutine = StartCoroutine(RunVampirism());
         }
     }
 
@@ -44,27 +50,27 @@ public class PlayerVampirer : MonoBehaviour
     {
         float elapsedTime = 0;
 
-        while (elapsedTime <= AmountTimeVampirism)
+        while (elapsedTime <= _amountTimeVampirism)
         {
             elapsedTime += Time.deltaTime;
 
-            if (TryFindNearestTarget(out IDamageable target, out int index))
+            if (TryFindNearestTarget(out IDamageable target))
             {
-                TakeAwayHealth(target, index);
+                TakeAwayHealth(target);
             }
 
-            VampirismRan?.Invoke();
+            VampirismRan?.Invoke(_decreaseFillCount);
 
             yield return null;
         }
 
         elapsedTime = 0;
 
-        while (elapsedTime <= AmountTimeReloadVampirism)
+        while (elapsedTime <= _amountTimeReloadVampirism)
         {
             elapsedTime += Time.deltaTime;
 
-            VampirismReloaded?.Invoke();
+            VampirismReloaded?.Invoke(_increaseFillCount);
 
             yield return null;
         }
@@ -72,30 +78,19 @@ public class PlayerVampirer : MonoBehaviour
         isRunVampirism = !isRunVampirism;
     }
 
-    private void TakeAwayHealth(IDamageable target, int index)
+    private void TakeAwayHealth(IDamageable target)
     {
-        if (items[index].TryGetComponent(out Health targetHealth))
-        {
-            if (targetHealth.Current <= 0)
-            {
-                return;
-            }
-            else
-            {
-                int tempHealth;
+            int tempHealth;
 
-                tempHealth = target.TakeDamage(_takeAwayHealthCount);
+            tempHealth = target.TakeDamage(_takeAwayHealthCount);
 
-                _health.Heal(tempHealth);
-            }
-        }
+            _health.Heal(tempHealth);
+      
     }
 
-    private bool TryFindNearestTarget(out IDamageable target, out int index)
+    private bool TryFindNearestTarget(out IDamageable target)
     {
         target = null;
-
-        index = 0;
 
         float nearestDistance = float.MaxValue;
 
@@ -121,8 +116,6 @@ public class PlayerVampirer : MonoBehaviour
                 if (tempDistance < nearestDistance)
                 {
                     target = tempTarget;
-
-                    index = i;
                 }
             }
         }

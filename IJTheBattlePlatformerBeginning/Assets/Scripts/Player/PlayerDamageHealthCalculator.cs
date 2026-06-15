@@ -10,7 +10,12 @@ public class PlayerDamageHealthCalculator : MonoBehaviour, IDamageable
 
     public int TakeDamage(int damage)
     {
-        int currentHealth; 
+        int currentHealth;
+
+        if (_health.Current <= 0)
+        {
+            return 0;
+        }
 
         if (damage < 0)
         {
@@ -26,7 +31,7 @@ public class PlayerDamageHealthCalculator : MonoBehaviour, IDamageable
 
         _health.TakeDamage(damage);
 
-        currentHealth = _health.Current; ;
+        currentHealth = _health.Current; 
 
         if (currentHealth <= _health.Min)
         {

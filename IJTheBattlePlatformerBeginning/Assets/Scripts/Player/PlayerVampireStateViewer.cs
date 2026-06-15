@@ -8,11 +8,8 @@ public class PlayerVampireStateViewer : MonoBehaviour
     [SerializeField] private SpriteRenderer _circle;
     [SerializeField] private Image _fillImigeBar;
 
-    private float _fillConvertCount = 100f;
     private float _fillMin = 0f;
     private float _fillMax = 1f;
-    private float _increaseFillCount;
-    private float _decreaseFillCount;
 
     private void OnEnable()
     {
@@ -26,32 +23,26 @@ public class PlayerVampireStateViewer : MonoBehaviour
         _playerVampirer.VampirismReloaded -= OnVampirismReloaded;
     }
 
-    private void Awake()
-    {
-        _decreaseFillCount = _playerVampirer.AmountTimeVampirism / _fillConvertCount;
-        _increaseFillCount = _playerVampirer.AmountTimeReloadVampirism / _fillConvertCount;
-    }
-
     private void Start()
     {
         _canvas.enabled = false;
         _circle.gameObject.SetActive(false);
     }
 
-    private void OnVampirismRan()
+    private void OnVampirismRan(float decreaseFillCount)
     {
         _canvas.enabled = true;
 
         _circle.gameObject.SetActive(true);
 
-        _fillImigeBar.fillAmount -= Mathf.Clamp(_decreaseFillCount, _fillMin, _fillMax);
+        _fillImigeBar.fillAmount -= Mathf.Clamp(decreaseFillCount, _fillMin, _fillMax);
     }
 
-    private void OnVampirismReloaded()
+    private void OnVampirismReloaded(float increaseFillCount)
     {
         _circle.gameObject.SetActive(false);
 
-        _fillImigeBar.fillAmount += Mathf.Clamp(_increaseFillCount, _fillMin, _fillMax);
+        _fillImigeBar.fillAmount += Mathf.Clamp(increaseFillCount, _fillMin, _fillMax);
 
         if (Mathf.Approximately(_fillImigeBar.fillAmount, _fillMax))
         {
