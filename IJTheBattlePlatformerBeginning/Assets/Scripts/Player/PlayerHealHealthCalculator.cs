@@ -4,19 +4,18 @@ public class PlayerHealHealthCalculator : MonoBehaviour
 {
     [SerializeField] private Health _health;
     [SerializeField] private Inventory _inventory;
-    [SerializeField] private int _aidMeat = 10; 
 
-    public void Heal()
+    public void Heal(int aidMeatAmount)
     {
-        if (_health.Current + _aidMeat <= _health.Max)
+        if (_health.Current + aidMeatAmount <= _health.Max)
         {
-            _health.SetCurrent(_health.Current + _aidMeat);
+            _health.Heal(_health.Current + aidMeatAmount);
         }
         else 
         {
-            _health.SetCurrent(_health.Max);
+            _health.Heal(_health.Max);
 
-            _inventory.AddHeal(_health.Current + _aidMeat - _health.Max);
+            _inventory.AddHeal(_health.Current + aidMeatAmount - _health.Max);
         }
     }
 }

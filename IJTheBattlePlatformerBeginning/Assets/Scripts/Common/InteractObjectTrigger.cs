@@ -4,7 +4,7 @@ using UnityEngine;
 public class InteractObjectTrigger : MonoBehaviour
 {
     public event Action CoinGot;
-    public event Action AidMeatGot;
+    public event Action<AidMeat> AidMeatGot;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,7 +18,7 @@ public class InteractObjectTrigger : MonoBehaviour
             }
             else if (interactObject is AidMeat aidMeat)
             {
-                AidMeatGot?.Invoke();
+                AidMeatGot?.Invoke(aidMeat);
 
                 aidMeat.Interact();
             }

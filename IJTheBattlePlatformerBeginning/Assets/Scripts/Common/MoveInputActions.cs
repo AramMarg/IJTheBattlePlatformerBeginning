@@ -53,6 +53,15 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Vampire"",
+                    ""type"": ""Button"",
+                    ""id"": ""41cd979b-0ae9-409a-b687-3dd319727ad1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -135,7 +144,7 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f199b378-be97-45a7-ade6-0569d8e9e898"",
+                    ""id"": ""1a954476-d87b-4163-bc7a-825d8e65fec0"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -154,6 +163,17 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1449428c-7e33-4e44-8192-350196630eaa"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vampire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -165,6 +185,7 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
         m_PlayerMovement_Move = m_PlayerMovement.FindAction("Move", throwIfNotFound: true);
         m_PlayerMovement_Jump = m_PlayerMovement.FindAction("Jump", throwIfNotFound: true);
         m_PlayerMovement_Attack = m_PlayerMovement.FindAction("Attack", throwIfNotFound: true);
+        m_PlayerMovement_Vampire = m_PlayerMovement.FindAction("Vampire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,6 +250,7 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMovement_Move;
     private readonly InputAction m_PlayerMovement_Jump;
     private readonly InputAction m_PlayerMovement_Attack;
+    private readonly InputAction m_PlayerMovement_Vampire;
     public struct PlayerMovementActions
     {
         private @MoveInputActions m_Wrapper;
@@ -236,6 +258,7 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_PlayerMovement_Move;
         public InputAction @Jump => m_Wrapper.m_PlayerMovement_Jump;
         public InputAction @Attack => m_Wrapper.m_PlayerMovement_Attack;
+        public InputAction @Vampire => m_Wrapper.m_PlayerMovement_Vampire;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -254,6 +277,9 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @Vampire.started += instance.OnVampire;
+            @Vampire.performed += instance.OnVampire;
+            @Vampire.canceled += instance.OnVampire;
         }
 
         private void UnregisterCallbacks(IPlayerMovementActions instance)
@@ -267,6 +293,9 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @Vampire.started -= instance.OnVampire;
+            @Vampire.performed -= instance.OnVampire;
+            @Vampire.canceled -= instance.OnVampire;
         }
 
         public void RemoveCallbacks(IPlayerMovementActions instance)
@@ -289,5 +318,6 @@ public partial class @MoveInputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnVampire(InputAction.CallbackContext context);
     }
 }

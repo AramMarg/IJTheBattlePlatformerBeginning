@@ -7,10 +7,22 @@ public class Health : MonoBehaviour
     public int Min { get; } = 0;
     public int Max { get; } = 100;
 
-    public event Action<int> HealthChanged;
+    public event Action<int> ValueChanged;
     public event Action Died;
 
-    public void SetCurrent(int current)
+    public void Heal(int healhealth)
+    {
+        SetCurrent(Mathf.Clamp(Current + healhealth,
+                   Min, Max));
+    }
+
+    public void TakeDamage(int damage)
+    {
+        SetCurrent(Mathf.Clamp(Current - damage,
+                    Min, Max));
+    }
+
+    private void SetCurrent(int current)
     {
         Current = current;
 
@@ -21,6 +33,6 @@ public class Health : MonoBehaviour
             return;
         }
 
-        HealthChanged?.Invoke(Current);
+        ValueChanged?.Invoke(Current);
     }
 }

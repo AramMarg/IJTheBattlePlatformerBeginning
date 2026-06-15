@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class SmoothHealthBarViewer : MonoBehaviour
 {
-    [SerializeField] protected Health Health;
+    [SerializeField] private Health _health;
     [SerializeField] private Image _fillImige;
     [SerializeField] private float _smoothSpeed = 5f;
 
@@ -14,17 +14,17 @@ public class SmoothHealthBarViewer : MonoBehaviour
 
     protected void OnEnable()
     {
-        Health.HealthChanged += OnHealthChanged;
+        _health.ValueChanged += OnHealthChanged;
     }
 
     protected void OnDisable()
     {
-        Health.HealthChanged -= OnHealthChanged;
+        _health.ValueChanged -= OnHealthChanged;
     }
 
     private void Start()
     {
-        _fillImige.fillAmount = Health.Max / _fillConvertCount;
+        _fillImige.fillAmount = _health.Max / _fillConvertCount;
     }
 
     public void OnHealthChanged(int helth)
@@ -54,13 +54,12 @@ public class SmoothHealthBarViewer : MonoBehaviour
         }
     }
 
-    //with movetowards exaple
+    //with MoveTowards exaple
     //private IEnumerator SmoothFill(int helth)
     //{ 
     //while (Mathf.Approximately(_fillImige.fillAmount,
     //    helth / _fillConvertCount) == false)
     //    {
-
     //        _fillImige.fillAmount = Mathf.Lerp
     //            (_fillImige.fillAmount, helth / _fillConvertCount,
     //          _smoothSpeed);

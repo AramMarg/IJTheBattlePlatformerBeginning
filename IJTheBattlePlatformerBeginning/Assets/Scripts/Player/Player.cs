@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerAnimator _playerAnimator;
     [SerializeField] private InteractObjectTrigger _interactObjectTrigger;
     [SerializeField] private UiViewer _uiViewer;
+    [SerializeField] private PlayerVampirer _playerVampirer;
 
     private Attacker _attacker;
     private Health _health;
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
         _inputReader.MoveClicked += OnMoveClicked;
         _inputReader.JumpClicked += OnJumpClicked;
         _inputReader.AttackClicked += OnAttackClicked;
+        _inputReader.VampireClicked += OnVampireClicked;
 
         _health.Died += OnDied;
 
@@ -42,27 +44,27 @@ public class Player : MonoBehaviour
         _interactObjectTrigger.AidMeatGot += OnAidMeatGot;
     }
 
-    private void OnACoinGot()
-    {
-        _uiViewer.CoinGot();
-    }
-
-    private void OnAidMeatGot()
-    {
-        _healHealthCalculator.Heal();
-    }
-
     private void OnDisable()
     {
         _inputReader.MoveClicked -= OnMoveClicked;
         _inputReader.JumpClicked -= OnJumpClicked;
         _inputReader.AttackClicked -= OnAttackClicked;
+        _inputReader.VampireClicked -= OnVampireClicked;
 
         _health.Died -= OnDied;
 
         _interactObjectTrigger.CoinGot -= OnACoinGot;
         _interactObjectTrigger.AidMeatGot -= OnAidMeatGot;
+    }
 
+    private void OnACoinGot()
+    {
+        _uiViewer.CoinGot();
+    }
+
+    private void OnAidMeatGot(AidMeat aidMeat)
+    {
+        _healHealthCalculator.Heal(aidMeat.AidMeatCount);
     }
 
     private void OnMoveClicked(Vector2 inputAxis)
@@ -101,6 +103,11 @@ public class Player : MonoBehaviour
         }
 
         _playerAnimator.Attack(isAttack);
+    }
+
+    private void OnVampireClicked()
+    {
+        _playerVampirer.StartVampirism();
     }
 
     private void OnDied()

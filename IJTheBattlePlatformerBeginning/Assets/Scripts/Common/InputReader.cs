@@ -9,6 +9,7 @@ public class InputReader : MonoBehaviour
     public event Action<Vector2> MoveClicked;
     public event Action<bool> JumpClicked;
     public event Action<bool> AttackClicked;
+    public event Action VampireClicked;
 
     private void Awake()
     {
@@ -26,6 +27,8 @@ public class InputReader : MonoBehaviour
 
         _inputActions.PlayerMovement.Attack.performed += OnAttaked;
         _inputActions.PlayerMovement.Attack.canceled += OnAttaked;
+
+        _inputActions.PlayerMovement.Vampire.started += OnVampired;
     }
 
     private void OnDisable()
@@ -39,6 +42,8 @@ public class InputReader : MonoBehaviour
 
         _inputActions.PlayerMovement.Attack.performed -= OnAttaked;
         _inputActions.PlayerMovement.Attack.canceled -= OnAttaked;
+
+        _inputActions.PlayerMovement.Vampire.started -= OnVampired;
     }
 
     private void OnDestroy()
@@ -65,5 +70,10 @@ public class InputReader : MonoBehaviour
         Vector2 direction = context.ReadValue<Vector2>();
 
         MoveClicked?.Invoke(direction);
+    }
+
+    private void OnVampired(InputAction.CallbackContext context)
+    {
+        VampireClicked?.Invoke();
     }
 }

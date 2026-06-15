@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Vampire",
+                    "type": "Button",
+                    "id": "41cd979b-0ae9-409a-b687-3dd319727ad1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -113,7 +122,7 @@
                 },
                 {
                     "name": "",
-                    "id": "f199b378-be97-45a7-ade6-0569d8e9e898",
+                    "id": "1a954476-d87b-4163-bc7a-825d8e65fec0",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
@@ -130,6 +139,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1449428c-7e33-4e44-8192-350196630eaa",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vampire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

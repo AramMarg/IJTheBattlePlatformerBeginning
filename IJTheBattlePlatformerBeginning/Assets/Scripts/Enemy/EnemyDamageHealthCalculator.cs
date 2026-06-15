@@ -7,13 +7,11 @@ public class EnemyDamageHealthCalculator : MonoBehaviour, IDamageable
 
     private int _minDamage = 1;
 
-    public void TakeDamage(int damage)
+    public int TakeDamage(int damage)
     {
-        int currentHealth = _health.Current;
-
         if (damage < 0)
         {
-            return;
+            return 0;
         }
 
         damage = _armor.ApplyArmor(damage);
@@ -23,8 +21,8 @@ public class EnemyDamageHealthCalculator : MonoBehaviour, IDamageable
             damage = _minDamage;
         }
 
-        currentHealth -= damage;
+        _health.TakeDamage(damage);
 
-        _health.SetCurrent(currentHealth);
+        return damage;
     }
 }
