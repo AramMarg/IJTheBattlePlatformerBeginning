@@ -7,6 +7,11 @@ public class PlayerHealHealthCalculator : MonoBehaviour
 
     public void Heal(int aidMeatAmount)
     {
+        if (aidMeatAmount < 0 )
+        {
+            return;
+        }
+
         if (_health.Current + aidMeatAmount <= _health.Max)
         {
             _health.Heal(_health.Current + aidMeatAmount);

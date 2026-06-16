@@ -5,42 +5,27 @@ using System.Collections;
 public class PlayerVampirer : MonoBehaviour
 {
     [SerializeField] private Health _health;
-    [SerializeField] private LayerMask _enemyLayerMask;
+    [SerializeField] private VampismNearestTargetFinder _vampismNearestTargetFinder; 
 
     private Coroutine _coroutine;
+    private int _takeAwayHealthCount = 5;   
+    private bool _isRunVampirism;
+    //private float _fillConvertCount = 100f;
+    //private float _increaseFillCount;
+    //private float _decreaseFillCount;
+    //private float elapsedTime = 0;
 
-    private int _takeAwayHealthCount = 5;
-
-    private float _checkRadius = 2f;
-
-    private int _maxEnemy = 5;
-
-    private bool isRunVampirism;
-
-    private Collider2D[] items;
-
-    private int _amountTimeVampirism = 6;
-    private int _amountTimeReloadVampirism = 4;
-    private float _fillConvertCount = 100f;
-    private float _increaseFillCount;
-    private float _decreaseFillCount;
+    public int AmountTimeVampirism { get; } = 6;
+    public int AmountTimeReloadVampirism { get; } = 4;
 
     public event Action<float> VampirismRan;
     public event Action<float> VampirismReloaded;
 
-    private void Awake()
-    {
-        items = new Collider2D[_maxEnemy];
-
-        _decreaseFillCount = _amountTimeVampirism / _fillConvertCount;
-        _increaseFillCount = _amountTimeReloadVampirism / _fillConvertCount;
-    }
-
     public void StartVampirism()
     {
-        isRunVampirism = !isRunVampirism;
+        _isRunVampirism = !_isRunVampirism;
 
-        if (isRunVampirism)
+        if (_isRunVampirism)
         {
             _coroutine = StartCoroutine(RunVampirism());
         }
@@ -48,34 +33,49 @@ public class PlayerVampirer : MonoBehaviour
 
     private IEnumerator RunVampirism()
     {
+        yield return UseVampirism();
+
+        yield return ReloadVampirism();
+
+        _isRunVampirism = !_isRunVampirism;
+    }
+
+    private IEnumerator UseVampirism()
+    {
         float elapsedTime = 0;
 
-        while (elapsedTime <= _amountTimeVampirism)
+        while (elapsedTime <= AmountTimeVampirism)
         {
             elapsedTime += Time.deltaTime;
 
-            if (TryFindNearestTarget(out IDamageable target))
+            if (_vampismNearestTargetFinder.TryFindNearestTarget(out IDamageable target))
             {
                 TakeAwayHealth(target);
             }
 
-            VampirismRan?.Invoke(_decreaseFillCount);
+            VampirismRan?.Invoke(elapsedTime);
 
             yield return null;
         }
 
-        elapsedTime = 0;
+        VampirismRan?.Invoke(AmountTimeVampirism);
+    }
 
-        while (elapsedTime <= _amountTimeReloadVampirism)
+    private IEnumerator ReloadVampirism()
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime <= AmountTimeReloadVampirism)
         {
             elapsedTime += Time.deltaTime;
 
-            VampirismReloaded?.Invoke(_increaseFillCount);
+            VampirismReloaded?.Invoke(elapsedTime);
 
             yield return null;
         }
 
-        isRunVampirism = !isRunVampirism;
+        VampirismReloaded?.Invoke(AmountTimeReloadVampirism);
+
     }
 
     private void TakeAwayHealth(IDamageable target)
@@ -85,42 +85,6 @@ public class PlayerVampirer : MonoBehaviour
             tempHealth = target.TakeDamage(_takeAwayHealthCount);
 
             _health.Heal(tempHealth);
-      
-    }
-
-    private bool TryFindNearestTarget(out IDamageable target)
-    {
-        target = null;
-
-        float nearestDistance = float.MaxValue;
-
-        int tempCountItems = Physics2D.OverlapCircleNonAlloc
-            (transform.position, _checkRadius, items, _enemyLayerMask);
-
-        if (tempCountItems == 0)
-        {
-            return false;
-        }
-
-        for (int i = 0; i < tempCountItems; i++)
-        {
-            float tempDistance;
-
-            Collider2D tempItem = items[i];
-
-            if (tempItem.TryGetComponent(out IDamageable tempTarget))
-            {
-                tempDistance = (transform.position -
-                    tempItem.gameObject.transform.position).sqrMagnitude;
-
-                if (tempDistance < nearestDistance)
-                {
-                    target = tempTarget;
-                }
-            }
-        }
-
-        return target != null;
     }
 }
 

@@ -10,7 +10,7 @@ public class PlayerDamageHealthCalculator : MonoBehaviour, IDamageable
 
     public int TakeDamage(int damage)
     {
-        int currentHealth;
+        int previousHealth;
 
         if (_health.Current <= 0)
         {
@@ -31,26 +31,18 @@ public class PlayerDamageHealthCalculator : MonoBehaviour, IDamageable
 
         _health.TakeDamage(damage);
 
-        currentHealth = _health.Current; 
+        previousHealth = _health.Current;
 
-        if (currentHealth <= _health.Min)
+        if (previousHealth <= _health.Min)
         {
             int tempheal = _inventory.GetHeal();
 
-            if (tempheal <= _health.Max)
-            {
-                _health.Heal(tempheal);
+            _health.Heal(tempheal);
 
-                _inventory.SetHeal(_health.Min);
-            }
-            else
-            {
-                _health.Heal(_health.Max); ;
-
-                _inventory.SetHeal(tempheal - _health.Max);
-            }
+            //check
+            _inventory.SetHeal(tempheal - (_health.Current - previousHealth));
         }
 
-        return damage;
+            return damage;
     }
 }

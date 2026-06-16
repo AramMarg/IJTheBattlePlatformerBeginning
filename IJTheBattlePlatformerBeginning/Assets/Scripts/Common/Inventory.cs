@@ -10,14 +10,14 @@ public class Inventory : MonoBehaviour
     {
         _heal = heal;
 
-        _uiViewer.AidMeatGot(_heal);
+        _uiViewer.OnAidMeatGot(_heal);
     }
 
     public void AddHeal(int heal)
     {
         _heal += heal;
 
-        _uiViewer.AidMeatGot(_heal);
+        _uiViewer.OnAidMeatGot(_heal);
     }       
 
     public int GetHeal() =>

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D), typeof(Attacker))]
@@ -15,12 +16,13 @@ public class Player : MonoBehaviour
     [SerializeField] private GroundCheker _groundChecker;
     [SerializeField] private PlayerAnimator _playerAnimator;
     [SerializeField] private InteractObjectTrigger _interactObjectTrigger;
-    [SerializeField] private UiViewer _uiViewer;
     [SerializeField] private PlayerVampirer _playerVampirer;
 
     private Attacker _attacker;
     private Health _health;
-    private PlayerHealHealthCalculator _healHealthCalculator;
+
+    public event Action CoinGot;
+    public event Action<int> AidMeatGot;
 
     private void Awake()
     {
@@ -28,7 +30,6 @@ public class Player : MonoBehaviour
 
         _attacker = GetComponent<Attacker>();
         _health = GetComponent<Health>();
-        _healHealthCalculator = GetComponent<PlayerHealHealthCalculator>();
     }
 
     private void OnEnable()
@@ -59,12 +60,12 @@ public class Player : MonoBehaviour
 
     private void OnACoinGot()
     {
-        _uiViewer.CoinGot();
+        CoinGot?.Invoke();
     }
 
     private void OnAidMeatGot(AidMeat aidMeat)
     {
-        _healHealthCalculator.Heal(aidMeat.AidMeatCount);
+        AidMeatGot?.Invoke (aidMeat.AidMeatCount);
     }
 
     private void OnMoveClicked(Vector2 inputAxis)

@@ -1,14 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerVampireStateViewer : MonoBehaviour
+public class PlayerVampireBarViewer : MonoBehaviour
 {
     [SerializeField] private PlayerVampirer _playerVampirer;   
     [SerializeField] private Canvas _canvas;
-    [SerializeField] private SpriteRenderer _circle;
     [SerializeField] private Image _fillImigeBar;
 
-    private float _fillMin = 0f;
     private float _fillMax = 1f;
 
     private void OnEnable()
@@ -23,26 +21,21 @@ public class PlayerVampireStateViewer : MonoBehaviour
         _playerVampirer.VampirismReloaded -= OnVampirismReloaded;
     }
 
-    private void Start()
+    private void Awake()
     {
         _canvas.enabled = false;
-        _circle.gameObject.SetActive(false);
     }
 
-    private void OnVampirismRan(float decreaseFillCount)
+    private void OnVampirismRan(float elapsedTime)
     {
         _canvas.enabled = true;
 
-        _circle.gameObject.SetActive(true);
-
-        _fillImigeBar.fillAmount -= Mathf.Clamp(decreaseFillCount, _fillMin, _fillMax);
+        _fillImigeBar.fillAmount = _fillMax - (elapsedTime / _playerVampirer.AmountTimeVampirism);
     }
 
-    private void OnVampirismReloaded(float increaseFillCount)
+    private void OnVampirismReloaded(float elapsedTime)
     {
-        _circle.gameObject.SetActive(false);
-
-        _fillImigeBar.fillAmount += Mathf.Clamp(increaseFillCount, _fillMin, _fillMax);
+        _fillImigeBar.fillAmount = elapsedTime / _playerVampirer.AmountTimeReloadVampirism;
 
         if (Mathf.Approximately(_fillImigeBar.fillAmount, _fillMax))
         {

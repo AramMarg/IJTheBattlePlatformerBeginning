@@ -975,6 +975,9 @@ GameObject:
   - component: {fileID: 799797856}
   - component: {fileID: 799797855}
   - component: {fileID: 799797857}
+  - component: {fileID: 799797858}
+  - component: {fileID: 799797859}
+  - component: {fileID: 799797860}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -1086,7 +1089,6 @@ MonoBehaviour:
   _groundChecker: {fileID: 799797841}
   _playerAnimator: {fileID: 1666039241}
   _interactObjectTrigger: {fileID: 799797848}
-  _uiViewer: {fileID: 1388899848}
   _playerVampirer: {fileID: 799797857}
 --- !u!114 &799797841
 MonoBehaviour:
@@ -1235,6 +1237,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: {fileID: 799797852}
+  _vampismNearestTargetFinder: {fileID: 799797860}
+--- !u!114 &799797858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799797835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084a3dae4322f40eba5e7fefd9b75dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerVampirer: {fileID: 799797857}
+  _canvas: {fileID: 4478603009745655650}
+  _fillImigeBar: {fileID: 1407912548080887006}
+--- !u!114 &799797859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799797835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965ca8685129c43b88adf0a280d627d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerVampirer: {fileID: 799797857}
+  _circle: {fileID: 80922929}
+--- !u!114 &799797860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799797835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8b39da483a644141b05f9515977f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _enemyLayerMask:
     serializedVersion: 2
     m_Bits: 4096
@@ -4018,6 +4062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a152c870e039e47d48c15b7dc33115d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 799797840}
   _coinCountText: {fileID: 1217101535}
   _aidMeatCountText: {fileID: 861075707}
 --- !u!114 &1388899849
@@ -8320,7 +8365,6 @@ GameObject:
   - component: {fileID: 89590152738063648}
   - component: {fileID: 1224016609616240657}
   - component: {fileID: 1407912548080887006}
-  - component: {fileID: 8497413104116303151}
   m_Layer: 5
   m_Name: ForegroundVampirebar
   m_TagString: Untagged
@@ -8328,22 +8372,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &8497413104116303151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8497413104116303150}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 084a3dae4322f40eba5e7fefd9b75dbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerVampirer: {fileID: 799797857}
-  _canvas: {fileID: 4478603009745655650}
-  _circle: {fileID: 80922929}
-  _fillImigeBar: {fileID: 1407912548080887006}
 --- !u!223 &8584344284424464316
 Canvas:
   m_ObjectHideFlags: 0
